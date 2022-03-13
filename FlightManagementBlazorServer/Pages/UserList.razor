@@ -1,0 +1,55 @@
+﻿@page "/Users"
+@inject UserService _userService;
+@inject NavigationManager _navigationManager;
+
+<h3>User List</h3>
+
+<button type="button" @onclick="OpenAddUserPage">
+    <span class="oi oi-plus"></span>
+    Add User
+</button>
+
+
+@if(Users==null)
+{
+    <p>Loading...</p>
+}
+else
+{
+        <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var user in Users)
+            {
+                <tr>
+                    <td>@user.Userame</td>
+                    <td>@user.Password</td>
+                    <td>@user.Role</td>
+                    <td>
+                       
+
+                    </td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<User> Users { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Users = await _userService.GetUsers();
+    }
+    private void OpenAddUserPage()
+    {
+        _navigationManager.NavigateTo("/AddUser");
+    }
+}

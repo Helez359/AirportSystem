@@ -1,0 +1,55 @@
+﻿@page "/CheckIn/{flightId}"
+@inject NavigationManager _navigationManager;
+@inject PassengerService _passengerService;
+
+<h3>Passenger CheckIn</h3>
+
+@if(Passengers == null)
+{
+    <p>Loading...</p>
+}
+else{
+    <EditForm Model="@passenger" OnValidSubmit="@CheckInPassengerSubmit">
+        <label for="passengers">Passenger</label>
+        <InputSelect id="passengers" @bind-Value="@passengerToCheckInId" class="form-control">
+            <option value="">Select...</option>
+            @foreach(var pass in Passengers)
+            {
+                <option value="@pass.Id">@pass.Name  @pass.LastName</option>
+            }
+        </InputSelect>
+        <label for="row">Row</label>
+        <InputNumber id="row" @bind-Value="@selectedRow" class="form-control"></InputNumber>
+        <label for="seat">Seat</label>
+        <InputText id="seat" @bind-Value="@selectedSeat" class="form-control"></InputText>
+        <button type="submit" class="btn btn-danger">
+            <span class="oi oi-delete"></span>
+            Check In
+        </button>
+    </EditForm>
+}
+
+@code{
+    [Parameter]
+    public string flightId { get; set; }
+    private List<Passenger> Passengers {get;set;}
+    Passenger passenger = new Passenger();
+    private int selectedRow { get; set; }
+    private string selectedSeat { get; set; }
+    private int passengerToCheckInId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Passengers = await _passengerService.GetUncheckedPassengers(int.Parse(flightId));
+    }
+    private async Task CheckInPassengerAsync()
+    {
+        await _passengerService.CheckPassengerAsync(passengerToCheckInId, selectedRow, selectedSeat);
+        _navigationManager.NavigateTo("/");
+    }
+    private void CheckInPassengerSubmit()
+    {
+        CheckInPassengerAsync();
+    }
+
+
+}

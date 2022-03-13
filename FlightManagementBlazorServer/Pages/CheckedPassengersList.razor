@@ -1,0 +1,44 @@
+﻿@page "/checkedPassengers/{flightId}"
+@inject NavigationManager _navigationManager;
+@inject PassengerService _passengerService;
+
+<h3>Checked Passengers List</h3>
+
+@if(Passengers == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+     <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var passenger in Passengers)
+            {
+                <tr>
+                    <td>@passenger.Name</td>
+                    <td>@passenger.LastName</td>
+                    <td>@passenger.Gender</td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string flightId { get; set; }
+    public List<Passenger> Passengers { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Passengers = await _passengerService.GetCheckedPassengersAsync(int.Parse(flightId));
+    }
+}

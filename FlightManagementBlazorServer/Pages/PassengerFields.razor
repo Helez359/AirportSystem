@@ -1,0 +1,17 @@
+﻿<form class="passengerFields mb-3">
+    <label for="passengerName">Name</label>
+    <InputText id="passengerName" class="form-control" @bind-Value="@Passenger.Name"></InputText>
+
+    <label for="passengerLastName">Last Name</label>
+    <InputText id="passengerLastName" class="form-control" @bind-Value="@Passenger.LastName"></InputText>
+
+    <label for="passengerGender">Gender</label>
+    <InputText id="passengerGender" class="form-control" @bind-Value="@Passenger.Gender"></InputText>
+</form>
+
+
+
+@code {
+    [Parameter]
+    public Passenger Passenger { get; set; }
+}

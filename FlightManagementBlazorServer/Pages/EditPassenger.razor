@@ -1,0 +1,44 @@
+﻿@page "/EditPassenger/{PassengerId}"
+@inject NavigationManager _navigationManager;
+@inject PassengerService _passengerService;
+
+<h3>Edit Passenger</h3>
+
+@if(Passenger == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@Passenger" OnValidSubmit="@UpdatePassengerAsync">
+        <PassengerFields Passenger="@Passenger"></PassengerFields>
+        <button type="submit">
+            <span class="oi-pencil"></span>
+            Update Passenger
+        </button>
+        <button type="button" @onclick="Close">
+            <span class="oi oi-media-skip-backward"></span>
+            Close
+        </button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public string PassengerId { get; set; }
+    public Passenger Passenger { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Passenger = await _passengerService.GetPassengerAsync(int.Parse(PassengerId));
+    }
+    private void Close()
+    {
+        _navigationManager.NavigateTo("/Passengers");
+    }
+    private async Task UpdatePassengerAsync()
+    {
+        await _passengerService.UpdatePassengerAsync(Passenger);
+        Close();
+    }
+}

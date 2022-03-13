@@ -1,0 +1,76 @@
+﻿@page "/AddUser"
+@using System.Text
+@inject UserService _userService;
+@inject NavigationManager _navigationManager;
+
+<h3>Add User</h3>
+
+<EditForm Model="@user" OnValidSubmit="@AddUserAsync">
+    <UserFields user="@user"></UserFields>
+    <button type="submit" class="btn btn-primary">
+        <span class="oi-pencil"></span>
+        Add User
+    </button>
+    <button type="button" @onclick="Close">
+        <span clss="oi oi-media-skip-backward"></span>
+        Close
+    </button>
+</EditForm>
+<NotificationDialog @ref="NotificationDialog" Description="@ConcatenatedValidationErrors"></NotificationDialog>
+
+@code {
+    public User user { get; set; }
+    public NotificationDialog NotificationDialog { get; set; }
+    public List<ValidationError> ValidationErrors { get; set; }
+    public string ConcatenatedValidationErrors { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        user = new User();
+    }
+    private async Task AddUserAsync()
+    {
+        ValidationErrors = ValidateUser();
+        if (ValidationErrors.Any())
+        {
+            ConcatenatedValidationErrors = GetConcatenatedValidationErrors(ValidationErrors);
+            NotificationDialog.Show();
+        }
+        else
+        {
+            await _userService.AddUserAsync(user);
+            Close();
+        }
+    }
+    private void Close()
+    {
+        _navigationManager.NavigateTo("/Users");
+    }
+    protected List<ValidationError> ValidateUser()
+    {
+        var validationErrors = new List<ValidationError>();
+        if (String.IsNullOrWhiteSpace(user.Userame))
+            validationErrors.Add(new ValidationError { Description = "Please Insert Username!" });
+        if (String.IsNullOrWhiteSpace(user.Password))
+            validationErrors.Add(new ValidationError { Description = "Please Insert Password!" });
+        if (String.IsNullOrWhiteSpace(user.Role))
+            validationErrors.Add(new ValidationError { Description = "Please Insert Role!" });
+        return validationErrors;
+    }
+    protected string GetConcatenatedValidationErrors(List<ValidationError> validationErrors)
+    {
+        StringBuilder message = new StringBuilder();
+        foreach (var error in validationErrors)
+        {
+            if (message.Length == 0)
+            {
+                message.Append(error.Description);
+            }
+            else
+            {
+                message.Append($"{Environment.NewLine}{error.Description}");
+            }
+        }
+
+        return message.ToString();
+    }
+}

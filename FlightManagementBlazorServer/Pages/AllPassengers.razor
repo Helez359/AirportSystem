@@ -1,0 +1,61 @@
+﻿@page "/Passengers"
+@inject PassengerService _passengerService;
+
+<h3>PassengerList</h3>
+
+
+@if(Passengers == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Flight Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var passenger in Passengers)
+            {
+                <tr>
+                    <td>@passenger.Name</td>
+                    <td>@passenger.LastName</td>
+                    <td>@passenger.Gender</td>
+                    <td>@passenger.FlightId</td>
+                    <td>
+                        <a href="/EditPassenger/@passenger.Id" class="btn btn-primary">
+                            <span class="oi oi-pencil"></span>    
+                        </a>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeletePassengerAsync(passenger.Id)">
+                            <span class="oi oi-delete"></span>
+                        </button>
+
+                    </td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string flightId { get; set; }
+    private List<Passenger> Passengers { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Passengers = await _passengerService.GetAllUncheckedPassengers();
+    }
+    private async Task DeletePassengerAsync(int passengerId)
+    {
+        await _passengerService.DeletePassengerAsync(passengerId);
+        Passengers = await _passengerService.GetAllUncheckedPassengers();
+    }
+    
+}
