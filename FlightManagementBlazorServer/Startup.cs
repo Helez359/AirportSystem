@@ -1,9 +1,12 @@
+using FlightManagementBlazorServer.Areas.Identity;
 using FlightManagementBlazorServer.Data;
 using FlightManagementBlazorServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +30,7 @@ namespace FlightManagementBlazorServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+     
             services.AddAuthentication("Identity.Application").AddCookie();
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -35,7 +39,8 @@ namespace FlightManagementBlazorServer
             services.AddScoped<FlightService>();
             services.AddScoped<CarrierService>();
             services.AddScoped<PassengerService>();
-            services.AddScoped<UserService>();
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +64,8 @@ namespace FlightManagementBlazorServer
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
 
             app.UseEndpoints(endpoints =>
             {

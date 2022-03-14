@@ -15,6 +15,6 @@ namespace FlightManagementWebAPI.DatabaseContext
         public DbSet<Flight> Flights { get; set; }
         public DbSet<Carrier> Carriers { get; set; }
         public DbSet<Passenger> Passengers { get; set; }
-        public DbSet<User> Users { get; set; }
+
     }
 }

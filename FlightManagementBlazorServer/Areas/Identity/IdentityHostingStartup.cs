@@ -1,4 +1,5 @@
 ﻿using System;
+using FlightManagementBlazorServer.Areas.Identity;
 using FlightManagementBlazorServer.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
