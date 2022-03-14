@@ -1,15 +1,21 @@
 ﻿@page "/archivedFlightList"
 @inject NavigationManager _navigationManager;
 @inject FlightService _flightService;
-<h3>Archived Flights</h3>
+@inherits ArchivedFlightListBase;
+
+<h3 class="display-3">Archived Flights</h3>
 
 @if(Flights == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
-    <table class="table table-responsive">
+    <div class="table-responsive">
+    <table class="table table-sm table-borderless">
         <thead>
             <tr>
                 <th>Number</th>
@@ -32,13 +38,6 @@ else
             }
         </tbody>
     </table>
+    </div>
 }
 
-@code {
-    public List<Flight> Flights { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Flights = await _flightService.GetArchivedFlights();
-    }
-}

@@ -1,7 +1,9 @@
 ﻿using DomainModel.Models;
 using FlightManagementBlazorServer.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -9,6 +11,8 @@ namespace FlightManagementBlazorServer.Pages
 {
     public class CarrierListBase : ComponentBase
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject]
         private NavigationManager _navigationManager { get; set; }
         [Inject]
@@ -17,6 +21,12 @@ namespace FlightManagementBlazorServer.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            var authenticationState = await authenticationStateTask;
+            if (!authenticationState.User.Identity.IsAuthenticated)
+            {
+                string returnUrl = WebUtility.UrlEncode("/CarrierList");
+                _navigationManager.NavigateTo($"/identity/account/login?returnUrl={returnUrl}");
+            }
             Carriers = await GetCarriersAsync();
         }
         protected void ShowAddCarrierPage()

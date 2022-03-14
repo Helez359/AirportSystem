@@ -2,8 +2,9 @@
 @using System.Text
 @inject NavigationManager _navigationManager;
 @inject PassengerService _passengerService;
+@inherits AddPassengerBase;
 
-<h3>Add Passenger</h3>
+<h3 class="display-3">Add Passenger</h3>
 
 @if(Passenger == null)
 {
@@ -30,64 +31,4 @@ else
 }
 
 
-@code {
-    [Parameter]
-    public string flightId { get; set; }
-    
-    public Passenger Passenger { get; set; }
-    public NotificationDialog NotificationDialog { get; set; }
-    public List<ValidationError> ValidationErrors { get; set; }
-    public string ConcatenatedValidationErrors { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        Passenger = new Passenger();
-    }
-    private void Close()
-    {
-        _navigationManager.NavigateTo("/");
-    }
-    public async Task AddPassengerAsync()
-    {
-        ValidationErrors = ValidatePassenger();
-        if (ValidationErrors.Any())
-        {
-            ConcatenatedValidationErrors = GetConcatenatedValidationErrors(ValidationErrors);
-            NotificationDialog.Show();
-        }
-        else
-        {
-            Passenger.FlightId = int.Parse(flightId);
-            await _passengerService.AddPassengerAsync(Passenger, int.Parse(flightId));
-            Close();
-        }
-    }
-    protected List<ValidationError> ValidatePassenger()
-    {
-        var validationErrors = new List<ValidationError>();
-        if (String.IsNullOrWhiteSpace(Passenger.Name))
-        validationErrors.Add(new ValidationError { Description = "Please Insert Passenger Name!" });
-        if (String.IsNullOrWhiteSpace(Passenger.LastName))
-        validationErrors.Add(new ValidationError { Description = "Please Insert Passenger Last Name!" });
-        if (String.IsNullOrWhiteSpace(Passenger.Gender))
-        validationErrors.Add(new ValidationError { Description = "Please Insert Passenger Gender!" });
-        return validationErrors;
-    }
-    protected string GetConcatenatedValidationErrors(List<ValidationError> validationErrors)
-    {
-        StringBuilder message = new StringBuilder();
-        foreach (var error in validationErrors)
-        {
-            if (message.Length == 0)
-            {
-                message.Append(error.Description);
-            }
-            else
-            {
-                message.Append($"{Environment.NewLine}{error.Description}");
-            }
-        }
-
-        return message.ToString();
-    }
-}

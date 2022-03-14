@@ -1,16 +1,21 @@
 ﻿@page "/checkedPassengers/{flightId}"
 @inject NavigationManager _navigationManager;
 @inject PassengerService _passengerService;
+@inherits CheckedPassengersListBase;
 
-<h3>Checked Passengers List</h3>
+<h3 class="display-3">Checked Passengers List</h3>
 
 @if(Passengers == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
-     <table class="table table-responsive">
+    <div class="table-responsive">
+     <table class="table table-sm table-borderless">
         <thead>
             <tr>
                 <th>Name</th>
@@ -30,15 +35,5 @@ else
             
         </tbody>
     </table>
-}
-
-@code {
-    [Parameter]
-    public string flightId { get; set; }
-    public List<Passenger> Passengers { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Passengers = await _passengerService.GetCheckedPassengersAsync(int.Parse(flightId));
-    }
+    </div>
 }

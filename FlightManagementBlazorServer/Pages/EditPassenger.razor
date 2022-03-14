@@ -1,12 +1,16 @@
 ﻿@page "/EditPassenger/{PassengerId}"
 @inject NavigationManager _navigationManager;
 @inject PassengerService _passengerService;
+@inherits EditPassengerBase;
 
-<h3>Edit Passenger</h3>
+<h3 class="display-3">Edit Passenger</h3>
 
 @if(Passenger == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
@@ -23,22 +27,3 @@ else
     </EditForm>
 }
 
-@code {
-    [Parameter]
-    public string PassengerId { get; set; }
-    public Passenger Passenger { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Passenger = await _passengerService.GetPassengerAsync(int.Parse(PassengerId));
-    }
-    private void Close()
-    {
-        _navigationManager.NavigateTo("/Passengers");
-    }
-    private async Task UpdatePassengerAsync()
-    {
-        await _passengerService.UpdatePassengerAsync(Passenger);
-        Close();
-    }
-}

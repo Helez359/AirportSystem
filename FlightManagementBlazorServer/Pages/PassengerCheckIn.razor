@@ -1,12 +1,16 @@
 ﻿@page "/CheckIn/{flightId}"
 @inject NavigationManager _navigationManager;
 @inject PassengerService _passengerService;
+@inherits PassengerCheckInBase;
 
-<h3>Passenger CheckIn</h3>
+<h3 class="display-3">Passenger CheckIn</h3>
 
 @if(Passengers == null)
 {
-    <p>Loading...</p>
+    <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else{
     <EditForm Model="@passenger" OnValidSubmit="@CheckInPassengerSubmit">
@@ -29,27 +33,4 @@ else{
     </EditForm>
 }
 
-@code{
-    [Parameter]
-    public string flightId { get; set; }
-    private List<Passenger> Passengers {get;set;}
-    Passenger passenger = new Passenger();
-    private int selectedRow { get; set; }
-    private string selectedSeat { get; set; }
-    private int passengerToCheckInId { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        Passengers = await _passengerService.GetUncheckedPassengers(int.Parse(flightId));
-    }
-    private async Task CheckInPassengerAsync()
-    {
-        await _passengerService.CheckPassengerAsync(passengerToCheckInId, selectedRow, selectedSeat);
-        _navigationManager.NavigateTo("/");
-    }
-    private void CheckInPassengerSubmit()
-    {
-        CheckInPassengerAsync();
-    }
 
-
-}

@@ -1,16 +1,21 @@
 ﻿@page "/Passengers"
 @inject PassengerService _passengerService;
+@inherits AllPassengersBase;
 
-<h3>PassengerList</h3>
+<h3 class="display-3">PassengerList</h3>
 
 
 @if(Passengers == null)
 {
-    <div>Loading...</div>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
-    <table class="table table-responsive">
+    <div class="table-responsive">
+    <table class="table table-sm table-borderless">
         <thead>
             <tr>
                 <th>Name</th>
@@ -28,7 +33,7 @@ else
                     <td>@passenger.Gender</td>
                     <td>@passenger.FlightId</td>
                     <td>
-                        <a href="/EditPassenger/@passenger.Id" class="btn btn-primary">
+                        <a href="/EditPassenger/@passenger.Id" class="btn btn-secondary">
                             <span class="oi oi-pencil"></span>    
                         </a>
                         <button type="button" class="btn btn-danger" @onclick="() => DeletePassengerAsync(passenger.Id)">
@@ -41,21 +46,5 @@ else
             
         </tbody>
     </table>
-}
-
-@code {
-    [Parameter]
-    public string flightId { get; set; }
-    private List<Passenger> Passengers { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Passengers = await _passengerService.GetAllUncheckedPassengers();
-    }
-    private async Task DeletePassengerAsync(int passengerId)
-    {
-        await _passengerService.DeletePassengerAsync(passengerId);
-        Passengers = await _passengerService.GetAllUncheckedPassengers();
-    }
-    
+    </div>
 }

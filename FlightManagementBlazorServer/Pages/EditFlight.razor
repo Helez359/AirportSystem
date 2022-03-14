@@ -1,11 +1,16 @@
 ﻿@page "/EditFlight/{FlightId}"
 @inject FlightService _flightService;
 @inject NavigationManager _navigationManager;
-<h3>Edit Flight</h3>
+@inherits EditFlightBase;
+
+<h3 class="display-3">Edit Flight</h3>
 
 @if(Flight == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
@@ -21,27 +26,4 @@ else
         </button>
     </EditForm>
 
-}
-
-@code {
-    [Parameter]
-    public string FlightId{ get; set; }
-
-    public Flight Flight{ get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Flight = await _flightService.GetFlightAsync(int.Parse(FlightId));
-    }
-
-    private void Close()
-    {
-        _navigationManager.NavigateTo("/");
-    }
-
-    private async Task UpdateFlightAsync()
-    {
-        await _flightService.UpdateFlight(Flight);
-        Close();
-    }
 }

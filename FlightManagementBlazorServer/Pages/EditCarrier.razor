@@ -1,12 +1,16 @@
 ﻿@page "/EditCarrier/{CarrierId}"
 @inject CarrierService _carrierService;
 @inject NavigationManager _navigationManager;
+@inherits EditCarrierBase;
 
-<h3>Edit Carrier</h3>
+<h3 class="display-3">Edit Carrier</h3>
 
 @if(Carrier == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
@@ -23,26 +27,3 @@ else
     </EditForm>
 }
 
-
-@code {
-    [Parameter]
-    public string CarrierId{ get; set; }
-
-    public Carrier Carrier{ get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Carrier = await _carrierService.GetCarrierAsync(int.Parse(CarrierId));
-    }
-
-    private async Task UpdateCarrierAsync()
-    {
-        await _carrierService.UpdateCarrierAsync(Carrier);
-        Close();
-    }
-
-    private void Close()
-    {
-        _navigationManager.NavigateTo("/CarrierList");
-    }
-}

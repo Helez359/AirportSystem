@@ -1,18 +1,22 @@
 ﻿@page "/CarrierList"
 @inherits CarrierListBase;
 
-<h3>Carrier List</h3>
+<h3 class="display-3">Carrier List</h3>
 <button type="button" class="btn btn-success" @onclick="ShowAddCarrierPage">
     <span class="oi oi-plus"></span>
     Add Carrier
 </button>
 @if(Carriers == null)
 {
-    <p>Loading...</p>
+     <br/>
+    <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden"></span>
+    </div>
 }
 else
 {
-    <table class="table table-responsive">
+    <div class="table-responsive">
+    <table class="table table-sm table-borderless">
         <thead>
             <tr>
                 <th>Name</th>
@@ -26,7 +30,7 @@ else
                     <td>@carrier.Name</td>
                     <td>@carrier.Country</td>
                     <td>
-                        <button type="button" class="btn btn-primary" @onclick="() => OpenEditCarrierPage(carrier.Id)">
+                        <button type="button" class="btn btn-secondary" @onclick="() => OpenEditCarrierPage(carrier.Id)">
                             <span class="oi oi-pencil"></span>
                         </button>
                         <button type="button" class="btn btn-danger" @onclick="() => DeleteCarrierAsync(carrier.Id)">
@@ -38,4 +42,5 @@ else
             }
         </tbody>
     </table>
+    </div>
 }
